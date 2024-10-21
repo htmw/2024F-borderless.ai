@@ -1,0 +1,171 @@
+.container {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: linear-gradient(135deg, e0f7fa, b2ebf2);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    }
+    
+    .logo img {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+    }
+    
+    .title {
+    color: 0277bd;
+    font-size: 28px;
+    margin: 0;
+    }
+    
+    .subtitle {
+    text-align: center;
+    color: 333;
+    font-size: 24px;
+    margin-bottom: 20px;
+    }
+    
+    .card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    
+    .project-details h3 {
+    color: 0277bd;
+    margin-top: 0;
+    }
+    
+    .input-group {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    }
+    
+    .input-field {
+    flex: 1;
+    margin-right: 10px;
+    }
+    
+    .input-field:last-child {
+    margin-right: 0;
+    }
+    
+    label {
+    display: block;
+    margin-bottom: 5px;
+    color: 666;
+    }
+    
+    input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+    }
+    
+    input:focus {
+    border-color: 0277bd;
+    outline: none;
+    }
+    
+    .file-upload {
+    margin-bottom: 20px;
+    }
+    
+    .upload-btn {
+    background-color: 0277bd;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    }
+    
+    .upload-btn:hover {
+    background-color: 01579b;
+    }
+    
+    .us-map {
+    border: 1px solid ddd;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: e1f5fe;
+    color: 01579b;
+    font-weight: bold;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    }
+    
+    .action-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    }
+    
+    .api-btn, .mode-btn {
+    width: 50px;
+    height: 50px;
+    border: none;
+    border-radius: 25px;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    }
+    
+    .api-btn {
+    background-color: 4caf50;
+    }
+    
+    .api-btn:hover {
+    background-color: 45a049;
+    }
+    
+    .mode-btn {
+    background-color: ff9800;
+    }
+    
+    .mode-btn:hover, .mode-btn.active {
+    background-color: f57c00;
+    }
+    
+    .plus {
+    font-size: 30px;
+    font-weight: bold;
+    }
+    
+    .api-count {
+    font-size: 24px;
+    font-weight: bold;
+    color: 0277bd;
+    }
+    
+    .info {
+    text-align: center;
+    color: 666;
+    }
+    
+    .info p {
+    margin: 5px 0;
+    }

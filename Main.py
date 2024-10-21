@@ -1,11 +1,29 @@
-from flask import Flask, request, jsonify
+from fastapi import FastAPI, File, UploadFile
+from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 import pdfplumber
+import io
 
-app = Flask(__name__)
+origins = [
+    "http://localhost:3000",  # React frontend
+]
 
-def extract_key_value_pairs(pdf_path):
+app = FastAPI()
+
+# Add CORS middleware to the FastAPI app
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow specified origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allow all headers
+)
+
+def extract_key_value_pairs(pdf_content):
     data = {}
-    with pdfplumber.open(pdf_path) as pdf:
+    
+    # Create a PDF file-like object from the content
+    with pdfplumber.open(io.BytesIO(pdf_content)) as pdf:  # Use io.BytesIO here
         for page in pdf.pages:
             text = page.extract_text().split("\n")
             for i, line in enumerate(text):
@@ -18,26 +36,21 @@ def extract_key_value_pairs(pdf_path):
                 # Add other fields as needed
     return data
 
-@app.route('/')
-def index():
-    return 'Hello from Flask!'
+@app.post("/upload-pdf/")
+async def upload_pdf(file: UploadFile = File(...)):
+    try:
+        # Read the uploaded PDF file
+        pdf_content = await file.read()
+        
+        # Process the PDF and extract key-value pairs
+        extracted_data = extract_key_value_pairs(pdf_content)
 
-@app.route('/extract', methods=['POST'])
-def extract():
-    if 'pdf' not in request.files:
-        return jsonify({"error": "No PDF file found in the request."}), 400
+        return JSONResponse(content={"data": extracted_data})
 
-    pdf = request.files['pdf']
+    except Exception as e:
+        print(f"Error processing PDF: {str(e)}")  # Print the error message
+        return JSONResponse(status_code=500, content={"error": str(e)})
 
-    # Save the uploaded PDF file temporarily
-    pdf_path = '/tmp/uploaded_pdf.pdf'
-    pdf.save(pdf_path)
-
-    # Extract the data from the PDF
-    extracted_data = extract_key_value_pairs(pdf_path)
-
-    # Return the extracted data as a JSON response
-    return jsonify(extracted_data)
-
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)

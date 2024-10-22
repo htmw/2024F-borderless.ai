@@ -21,20 +21,31 @@ app.add_middleware(
 
 def extract_key_value_pairs(pdf_content):
     data = {}
-    
+
     # Create a PDF file-like object from the content
-    with pdfplumber.open(io.BytesIO(pdf_content)) as pdf:  # Use io.BytesIO here
+    with pdfplumber.open(io.BytesIO(pdf_content)) as pdf:
         for page in pdf.pages:
             text = page.extract_text().split("\n")
             for i, line in enumerate(text):
-                if "SURNAME/PRIMARY NAME" in line:
-                    if i + 1 < len(text):
-                        data['SURNAME/PRIMARY NAME'] = text[i + 1].strip()
-                elif "DATE OF BIRTH" in line:
-                    if i + 1 < len(text):
-                        data['DATE OF BIRTH'] = text[i + 1].strip()
-                # Add other fields as needed
+                # Ensure there's a next line to read for values
+                if i + 1 < len(text):
+                    # Split the field names and values
+                    fields = line.split()  # Split the line into words (field names)
+                    values_line = text[i + 1].strip()  # Next line for values
+                    values = values_line.split()  # Split values line into words
+
+                    # Depending on the number of fields, you can adjust accordingly
+                    if "SURNAME/PRIMARY NAME" in line:
+                        data["SURNAME/PRIMARY NAME"] = values[0]  # Adjust if necessary
+                    if "DATE OF BIRTH" in line:
+                        # We want the last value in the line for DATE OF BIRTH
+                        data["DATE OF BIRTH"] = values [-3] + " " + values[-2] + " " + values[-1] # Should capture the full date
+
+                    if "CITY OF BIRTH" in line:
+                        data["CITY OF BIRTH"] = values[0] + " " + values[1]  # Combine city and state if necessary
+
     return data
+
 
 @app.post("/upload-pdf/")
 async def upload_pdf(file: UploadFile = File(...)):

@@ -1,0 +1,10 @@
+{
+    "extends": ["react-app", "eslint:recommended", "plugin:react/recommended"],
+    "plugins": ["react", "react-hooks"],
+    "rules": {
+      "react/prop-types": "off",
+      "react/react-in-jsx-scope": "off",
+      "no-console": "warn"
+    }
+  }
+  

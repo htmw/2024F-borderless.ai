@@ -1,0 +1,138 @@
+/* Dark mode styles */
+body.dark-mode {
+    background: #1a1a1a;
+    color: #ffffff;
+}
+
+/* Container styles */
+.dark-mode .container {
+    background-color: rgba(26, 26, 26, 0.9);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Card styles */
+.dark-mode .card {
+    background-color: #2d2d2d;
+    border: 1px solid #404040;
+}
+
+/* Input styles */
+.dark-mode input {
+    background-color: #2d2d2d;
+    border: 1px solid #404040;
+    color: #ffffff;
+}
+
+.dark-mode input:focus {
+    border-color: #0277bd;
+    background-color: #333333;
+}
+
+/* Button styles */
+.dark-mode .api-btn,
+.dark-mode .mode-btn {
+    background-color: #0277bd;
+}
+
+.dark-mode .api-btn:hover,
+.dark-mode .mode-btn:hover {
+    background-color: #01579b;
+}
+
+/* Title styles */
+.dark-mode .title {
+    color: #0277bd;
+}
+
+.dark-mode .subtitle {
+    color: #ffffff;
+}
+
+/* Project details styles */
+.dark-mode .project-details h3 {
+    color: #0277bd;
+}
+
+.dark-mode .project-details p {
+    color: #e0e0e0;
+}
+
+/* Result section styles */
+.dark-mode .result {
+    background-color: #2d2d2d;
+    border: 1px solid #404040;
+}
+
+.dark-mode .result h3 {
+    color: #0277bd;
+}
+
+/* Info section styles */
+.dark-mode .info {
+    color: #e0e0e0;
+}
+
+/* Dark mode toggle button */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px;
+    border-radius: 50%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.dark-mode .theme-toggle {
+    color: #ffffff;
+}
+
+/* Chat box dark mode styles */
+.dark-mode .chat-container {
+    background: #2d2d2d;
+    border: 1px solid #404040;
+}
+
+.dark-mode .chat-messages {
+    background: #1a1a1a;
+}
+
+.dark-mode .message.ai .message-content {
+    background: #404040;
+    color: #ffffff;
+}
+
+.dark-mode .message-timestamp {
+    color: #888888;
+}
+
+.dark-mode .chat-input {
+    background: #2d2d2d;
+    border-top: 1px solid #404040;
+}
+
+.dark-mode .message-input {
+    background: #404040;
+    border: 1px solid #555555;
+    color: #ffffff;
+}
+
+.dark-mode .message-input::placeholder {
+    color: #888888;
+}
+
+/* Transitions */
+.container,
+.card,
+input,
+button,
+.chat-container,
+.message-content {
+    transition: all 0.3s ease;
+}

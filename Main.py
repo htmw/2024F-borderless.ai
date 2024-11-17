@@ -1,65 +1,75 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 import pdfplumber
 import io
+from sandbox import query_pinecone  # Import the function from sandbox.py
+import logging
 
-origins = [
-    "http://localhost:3000",  # React frontend
-]
+# Configure logging
+logging.basicConfig(level=logging.INFO)
 
 app = FastAPI()
 
-# Add CORS middleware to the FastAPI app
+# Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow specified origins
+    allow_origins=["*"],  # Adjust as needed
     allow_credentials=True,
-    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc.)
-    allow_headers=["*"],  # Allow all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
+# Request model for query endpoint
+class QueryRequest(BaseModel):
+    query: str
+
+# Function to extract key-value pairs from PDF
 def extract_key_value_pairs(pdf_content):
     data = {}
+    try:
+        with pdfplumber.open(io.BytesIO(pdf_content)) as pdf:
+            for page in pdf.pages:
+                text = page.extract_text().split("\n")
+                for i, line in enumerate(text):
+                    if i + 1 < len(text):
+                        fields = line.split()
+                        values_line = text[i + 1].strip()
+                        values = values_line.split()
 
-    # Create a PDF file-like object from the content
-    with pdfplumber.open(io.BytesIO(pdf_content)) as pdf:
-        for page in pdf.pages:
-            text = page.extract_text().split("\n")
-            for i, line in enumerate(text):
-                # Ensure there's a next line to read for values
-                if i + 1 < len(text):
-                    # Split the field names and values
-                    fields = line.split()  # Split the line into words (field names)
-                    values_line = text[i + 1].strip()  # Next line for values
-                    values = values_line.split()  # Split values line into words
-
-                    # Depending on the number of fields, you can adjust accordingly
-                    if "SURNAME/PRIMARY NAME" in line:
-                        data["SURNAME/PRIMARY NAME"] = values[0]  # Adjust if necessary
-                    if "DATE OF BIRTH" in line:
-                        # We want the last value in the line for DATE OF BIRTH
-                        data["DATE OF BIRTH"] = values [-3] + " " + values[-2] + " " + values[-1] # Should capture the full date
-
-                    if "CITY OF BIRTH" in line:
-                        data["CITY OF BIRTH"] = values[0] + " " + values[1]  # Combine city and state if necessary
-
+                        if "SURNAME/PRIMARY NAME" in line:
+                            data["SURNAME/PRIMARY NAME"] = values[0]
+                        if "DATE OF BIRTH" in line:
+                            data["DATE OF BIRTH"] = " ".join(values[-3:])
+                        if "CITY OF BIRTH" in line:
+                            data["CITY OF BIRTH"] = " ".join(values[:2])
+    except Exception as e:
+        logging.error(f"Error extracting PDF data: {str(e)}")
+        raise Exception(f"Error extracting PDF data: {str(e)}")
     return data
-
 
 @app.post("/upload-pdf/")
 async def upload_pdf(file: UploadFile = File(...)):
+    if not file.filename.endswith(".pdf"):
+        return JSONResponse(status_code=400, content={"error": "File must be a PDF."})
     try:
-        # Read the uploaded PDF file
         pdf_content = await file.read()
-        
-        # Process the PDF and extract key-value pairs
         extracted_data = extract_key_value_pairs(pdf_content)
-
         return JSONResponse(content={"data": extracted_data})
-
     except Exception as e:
-        print(f"Error processing PDF: {str(e)}")  # Print the error message
+        logging.error(f"Error processing PDF: {str(e)}")
+        return JSONResponse(status_code=500, content={"error": str(e)})
+
+@app.post("/query/")
+async def query(request: QueryRequest):
+    logging.info(f"Received query: {request.query}")
+    try:
+        results = query_pinecone(request.query)
+        logging.info("Query processed successfully.")
+        return JSONResponse(content={"data": results})
+    except Exception as e:
+        logging.error(f"Error processing query: {str(e)}")
         return JSONResponse(status_code=500, content={"error": str(e)})
 
 if __name__ == "__main__":

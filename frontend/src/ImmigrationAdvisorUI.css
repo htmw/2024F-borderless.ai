@@ -1,18 +1,22 @@
 body {
     /* Update the background image path to reference it from the src folder */
     background-image: url('./Background.jpeg');
-    background-size: cover;
-    background-position: center;
-    margin: 0;
+    /*background-size: cover;
+    background-position: center;*/
+    padding-right: 20%;
+    padding-left: 20%;
+    padding-top: 50px;
+    padding-bottom: 50px;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     min-height: 100vh;
 }
 
 .container {
     max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: rgba(255, 255, 255, 0.9);
+    margin: 20%;
+    padding: 20%;
+    /*background-image: url('./Background.jpeg');*/
+    /*mix-blend-mode: overlay;*/
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     z-index: 1;
@@ -83,6 +87,7 @@ body {
 .input-field {
     flex: 1;
     margin-right: 10px;
+    width: fit-content;
 }
 
 .input-field:last-child {
@@ -203,7 +208,7 @@ input:focus {
     margin-top: 20px;
     background: white;
     border-radius: 8px;
-    overflow: hidden;
+    overflow: auto;
     display: flex;
     flex-direction: column;
     height: 500px;
@@ -212,6 +217,7 @@ input:focus {
   .messages-container {
     flex-grow: 1;
     overflow-y: auto;
+    overflow-x: auto;
     padding: 20px;
     background: #f8f9fa;
   }
@@ -231,16 +237,31 @@ input:focus {
   }
   
   .message-content {
-    max-width: 80%;
     padding: 12px 16px;
     border-radius: 12px;
     font-size: 14px;
     line-height: 1.5;
+    letter-spacing: .05em;
+    white-space: pre-line;
+    position: relative;
+    animation: typing 4.5s steps(150, end) forwards;
+    overflow: hidden; /* still preventing overflow but works with clip-path */
   }
+  
+  @keyframes typing {
+    from {
+      clip-path: inset(0 100% 0 0); /* Start with content hidden to the right */
+    }
+    to {
+      clip-path: inset(0 0 0 0); /* Reveal content by removing the right clip */
+    }
+  }
+  
   
   .user-message .message-content {
     background: #0277bd;
-    color: white;
+    color: violet;
+    font-size: large;
   }
   
   .ai-message .message-content {
@@ -332,6 +353,7 @@ input:focus {
     --bg-primary: #ffffff;
     --bg-secondary: #f8f9fa;
     --border-color: #dddddd;
+    background-blend-mode: overlay;
 }
 
 /* Dark mode variables */

@@ -78,11 +78,6 @@ const ImmigrationAdvisorUI = () => {
                     </div>
                 </div>
 
-                <div className="info">
-                    <p>Current Mode: {mode}</p>
-                    <p>API calls: {apiCallCount}</p>
-                </div>
-
                 {/* Chat Component */}
                 <div className="chat-section">
                     <ChatBox darkMode={darkMode} />

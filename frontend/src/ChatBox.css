@@ -143,12 +143,12 @@
 .typing-dots span:nth-child(3) {
     animation-delay: 0.4s;
 }
-
+/*
 @keyframes typing {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-10px); }
 }
-
+*/
 .input-area {
     display: flex;
     align-items: center;

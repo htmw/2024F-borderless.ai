@@ -17,7 +17,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Adjust as needed
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["*"],  # Include OPTIONS requests
     allow_headers=["*"],
 )
 
@@ -70,7 +70,18 @@ async def query(request: QueryRequest):
         return JSONResponse(content={"data": results})
     except Exception as e:
         logging.error(f"Error processing query: {str(e)}")
-        return JSONResponse(status_code=500, content={"error": str(e)})
+        return JSONResponse(status_code=500, content={"error": str(e)})  # Return 500 status code
+      
+@app.options("/{rest_of_path:path}")
+async def preflight_handler():
+    return JSONResponse(
+        headers={
+            "access-control-allow-origin": "*",
+            "access-control-allow-methods": "*",
+            "access-control-allow-headers": "*",
+        },
+        content={"message": "Preflight check passed"},
+    )
 
 if __name__ == "__main__":
     import uvicorn

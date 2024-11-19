@@ -1,6 +1,6 @@
 from sentence_transformers import SentenceTransformer
-from pinecone import Pinecone
 import logging
+from pinecone import Pinecone
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -11,25 +11,37 @@ model = SentenceTransformer('distilbert-base-nli-stsb-mean-tokens')
 pinecone_api_key = "06b354bc-e1b7-4a4f-aac7-1dd8ff4b941b"
 index_name = "immigration-vectors-index"
 
+# Initialize Pinecone client
 pc = Pinecone(api_key=pinecone_api_key)
+
+# Wait for Pinecone index to be ready
 while not pc.describe_index(index_name).status['ready']:
     logging.info("Waiting for Pinecone index to be ready...")
+
 index = pc.Index(index_name)
 logging.info("Pinecone index is ready.")
 
-# Encode the query
-query = "What do I need to do in order to apply for a F-1 visa?"
-query_vector = model.encode(query).tolist()
-print(f"Question: {query}")
-print("\nTop Ranked Most Relevant Sentences within Document Database:")
+# Function to query Pinecone index with a given query
+def query_pinecone(query):
+    # Encode the query using SentenceTransformer
+    query_vector = model.encode(query).tolist()
+    logging.info(f"Query: {query}")
 
-# Perform the query
-response = index.query(vector=query_vector, top_k=5, include_metadata=True)
-for match in response['matches']:
-    print(f"Document ID: {match['metadata']['document_id']}")
-    print(f"Segment Index: {match['metadata']['segment_index']}")
-    print(f"Segment Text: {match['metadata']['segment_text']}")
-    print(f"Similarity Score: {match['score']}\n")
+    # Perform the query on Pinecone
+    response = index.query(vector=query_vector, top_k=5, include_metadata=True)
+    
+    # Return the results
+    results = []
+    for match in response['matches']:
+        results.append({
+            "document_id": match['metadata']['document_id'],
+            "segment_index": match['metadata']['segment_index'],
+            "segment_text": match['metadata']['segment_text'],
+            "similarity_score": match['score']
+        })
+    
+    return results
+
 
 # import numpy as np
 # import firebase_admin

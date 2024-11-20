@@ -57,26 +57,6 @@ const ImmigrationAdvisorUI = () => {
                     <p><strong>Project Description:</strong> AI-based application to assist international students with immigration-related queries.</p>
                 </div>
 
-                <div className="input-group">
-                    <div className="input-field">
-                        <label htmlFor="startDate">Start date:</label>
-                        <input
-                            id="startDate"
-                            type="date"
-                            value={startDate}
-                            onChange={(e) => setStartDate(e.target.value)}
-                        />
-                    </div>
-                    <div className="input-field">
-                        <label htmlFor="schoolName">School name:</label>
-                        <input
-                            id="schoolName"
-                            type="text"
-                            value={schoolName}
-                            onChange={(e) => setSchoolName(e.target.value)}
-                        />
-                    </div>
-                </div>
 
                 {/* Chat Component */}
                 <div className="chat-section">
